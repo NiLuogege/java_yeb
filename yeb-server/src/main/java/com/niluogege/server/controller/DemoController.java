@@ -1,0 +1,24 @@
+package com.niluogege.server.controller;
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author niluogege
+ * @since 2021-10-29
+ */
+@RestController
+@RequestMapping("/demo")
+public class DemoController {
+
+    @RequestMapping("hello")
+    public String hello(){
+        return "dasfasf";
+    }
+
+}
