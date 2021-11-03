@@ -1,5 +1,6 @@
 package com.niluogege.server.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -17,6 +18,9 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
+
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
 
     @Bean
     public Docket createRestApi() {
@@ -41,7 +45,7 @@ public class Swagger2Config {
 
     private List<SecurityScheme> securitySchemes(){
         ArrayList<SecurityScheme> result = new ArrayList<>();
-        ApiKey apiKey = new ApiKey("Authorization", "Authorization", "Header");
+        ApiKey apiKey = new ApiKey("Authorization", tokenHeader, "Header");
         result.add(apiKey);
         return  result;
     }
@@ -64,7 +68,7 @@ public class Swagger2Config {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0]=authorizationScope;
-        result.add(new SecurityReference("Authorization",authorizationScopes));
+        result.add(new SecurityReference("Auth",authorizationScopes));
         return result;
     }
 }
