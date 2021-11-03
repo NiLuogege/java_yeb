@@ -51,6 +51,13 @@
             <version>1.9.6</version>
         </dependency>
 
+        <!-- Swagger官方ui依赖 -->
+<!--        <dependency>-->
+<!--            <groupId>io.springfox</groupId>-->
+<!--            <artifactId>springfox-swagger-ui</artifactId>-->
+<!--            <version>3.0.0</version>-->
+<!--        </dependency>-->
+
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>

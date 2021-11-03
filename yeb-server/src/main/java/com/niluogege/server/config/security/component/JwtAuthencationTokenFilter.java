@@ -22,7 +22,6 @@ public class JwtAuthencationTokenFilter extends OncePerRequestFilter {
 
     @Value("${jwt.tokenHeader}")
     private String tokenHeader;
-
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
