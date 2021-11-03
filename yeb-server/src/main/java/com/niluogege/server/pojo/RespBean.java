@@ -28,6 +28,13 @@ public class RespBean {
 
     /**
      * 成功返回结果
+     */
+    public static RespBean success(Object obj) {
+        return new RespBean(200, "success", obj);
+    }
+
+    /**
+     * 成功返回结果
      *
      * @param message
      * @param obj

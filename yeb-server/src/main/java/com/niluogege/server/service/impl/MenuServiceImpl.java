@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.niluogege.server.mapper.MenuMapper;
 import com.niluogege.server.pojo.Menu;
 import com.niluogege.server.service.IMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
 
+    @Autowired
+    private MenuMapper menuMapper;
+
+    /**
+     * 通过 用户id 获取菜单
+     * @param adminId
+     */
+    @Override
+    public List<Menu> getMenusByAdminId(Integer adminId) {
+      return   menuMapper.getMenusByAdminId(adminId);
+    }
 }
