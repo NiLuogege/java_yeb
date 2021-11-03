@@ -23,7 +23,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.niluogge.server.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.niluogege.server.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .securityContexts(securityContexts())
