@@ -1,5 +1,6 @@
 package com.niluogege.server.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.niluogege.server.config.security.component.JwtTokenUtil;
 import com.niluogege.server.mapper.AdminMapper;
@@ -41,6 +42,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
+    @Autowired
+    private AdminMapper adminMapper;
+
     @Override
     public RespBean login(String username, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -48,7 +52,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
             return RespBean.error("用户名密码不正确");
         }
 
-        if (userDetails.isEnabled()) {
+        if (!userDetails.isEnabled()) {
             return RespBean.error("账号被禁用，请联系管理员");
         }
 
@@ -62,5 +66,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         map.put("tokenHead", tokenHead);
 
         return RespBean.success("登录成功", map);
+    }
+
+    @Override
+    public Admin getAdminByUserName(String username) {
+        return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username",username));
     }
 }

@@ -27,4 +27,9 @@ public interface IAdminService extends IService<Admin> {
      */
     RespBean login(String username, String password);
 
+
+    /**
+     * 通过 username 获取用户信息
+     */
+    Admin getAdminByUserName(String username);
 }
