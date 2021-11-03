@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-10-29
  */
 @RestController
-@RequestMapping("/demo")
+@RequestMapping("/hello")
 public class DemoController {
 
     @RequestMapping("hello")
