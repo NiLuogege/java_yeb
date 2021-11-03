@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -46,7 +47,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private AdminMapper adminMapper;
 
     @Override
-    public RespBean login(String username, String password) {
+    public RespBean login(String username, String password,String code, HttpServletRequest request) {
+        //通过session 拿到 验证码
+        String captcha = (String) request.getSession().getAttribute("captcha");
+        if (StringUtils.isEmpty(captcha) || !captcha.equals(code)){
+            return RespBean.error("验证码错误");
+        }
+
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (null == userDetails || !passwordEncoder.matches(password, userDetails.getPassword())) {
             return RespBean.error("用户名密码不正确");
