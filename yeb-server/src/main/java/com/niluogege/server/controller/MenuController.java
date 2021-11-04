@@ -26,7 +26,7 @@ import java.util.List;
  * @since 2021-10-29
  */
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/system")
 @Api(tags = "MenuController")
 public class MenuController {
 
@@ -37,7 +37,7 @@ public class MenuController {
     private RedisTemplate redisTemplate;
 
     @ApiOperation("通过 用户id 获取菜单")
-    @GetMapping("/getMenusByAdminId")
+    @GetMapping("/menu")
     public RespBean getMenusByAdminId(Integer adminId) {
 
         BoundValueOperations<String, List<Menu>> menuOperations = redisTemplate.boundValueOps("menus_" + adminId);

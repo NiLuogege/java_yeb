@@ -10,15 +10,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author niluogege
@@ -28,8 +30,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_admin")
-@ApiModel(value="Admin对象", description="")
-public class Admin implements Serializable , UserDetails {
+@ApiModel(value = "Admin对象", description = "")
+public class Admin implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -68,9 +70,15 @@ public class Admin implements Serializable , UserDetails {
     @TableField(exist = false)
     private List<Role> roles;
 
+    /**
+     * 返回该用户的权限列表
+     * @return
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+//        return null;
+        List<SimpleGrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return  authorities;
     }
 
     @Override

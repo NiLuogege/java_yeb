@@ -1,11 +1,10 @@
 package com.niluogege.server.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.niluogege.server.config.security.component.CaptchaConfig;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +28,7 @@ public class CaptchaController {
     private DefaultKaptcha defaultKaptcha;
 
     @ApiOperation(value = "获取验证码")
-    @RequestMapping(produces = "image/jpeg")
+    @GetMapping(produces = "image/jpeg")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
         //下面代码设置 response 输出类型为 image/jpeg
         response.setDateHeader("Expires", 0);

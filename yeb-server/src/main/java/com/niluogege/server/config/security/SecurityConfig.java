@@ -1,13 +1,12 @@
 package com.niluogege.server.config.security;
 
-import com.niluogege.server.config.security.component.JwtAuthencationTokenFilter;
-import com.niluogege.server.config.security.component.RestAuthorizationEntryPoint;
-import com.niluogege.server.config.security.component.RestfulAccessDeniedHandler;
+import com.niluogege.server.config.security.component.*;
 import com.niluogege.server.pojo.Admin;
 import com.niluogege.server.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -18,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -31,6 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private RestAuthorizationEntryPoint restAuthorizationEntryPoint;
+
+    @Autowired
+    private CustomFilter customFilter;
+
+    @Autowired
+    private CustomUrlDecisionManager customUrlDecisionManager;
 
     @Autowired
     private IAdminService adminService;
@@ -50,8 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                System.out.println("loadUserByUsername 通过用户名 获取到用户 并返回");
+
                 Admin admin = adminService.getAdminByUserName(username);
                 if (admin != null) {
+                    //注入角色
+                    admin.setRoles(adminService.getRoles(admin.getId()));
                     return admin;
                 }
                 throw new UsernameNotFoundException("用户名或密码不正确");
@@ -98,6 +108,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
+                //动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setAccessDecisionManager(customUrlDecisionManager);
+                        o.setSecurityMetadataSource(customFilter);
+                        return o;
+                    }
+                })
                 .and()
                 //禁用缓存
                 .headers()

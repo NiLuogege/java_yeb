@@ -27,6 +27,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
+        System.out.println("CustomFilter 查询当前url 所需的角色列表");
         //获取到 请求的url
         String requestUrl = ((FilterInvocation) object).getRequestUrl();
         List<Menu> allMenuWithRole = menuService.getAllMenuWithRole();
@@ -35,6 +36,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
             if (antPathMatcher.match(menu.getUrl(), requestUrl)) {
                 //返回所需角色列表
                 String[] str = menu.getRoles().stream().map(Role::getName).toArray(String[]::new);
+                System.out.println("当前url 所需要的 角色列表 ="+str.toString());
                 return SecurityConfig.createList(str);
             }
         }
