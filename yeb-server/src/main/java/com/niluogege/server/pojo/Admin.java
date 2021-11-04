@@ -1,6 +1,7 @@
 package com.niluogege.server.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -62,6 +64,9 @@ public class Admin implements Serializable , UserDetails {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ApiModelProperty(value = "角色（权限）")
+    @TableField(exist = false)
+    private List<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

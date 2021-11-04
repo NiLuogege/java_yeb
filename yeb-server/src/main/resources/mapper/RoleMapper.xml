@@ -14,4 +14,18 @@
         id, name, nameZh
     </sql>
 
+    <!--通过用户id 获取对应角色（权限）-->
+    <select id="getRoles" resultMap="BaseResultMap">
+        SELECT
+            r.id ,
+            r.name ,
+            r.nameZh
+
+        FROM
+            t_role as r
+                LEFT JOIN t_admin_role as ar ON ar.rid = r.id
+        WHERE
+            ar.adminId = #{adminId}
+    </select>
+
 </mapper>

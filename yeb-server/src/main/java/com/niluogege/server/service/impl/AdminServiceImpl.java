@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.niluogege.server.config.security.component.JwtTokenUtil;
 import com.niluogege.server.mapper.AdminMapper;
+import com.niluogege.server.mapper.RoleMapper;
 import com.niluogege.server.pojo.Admin;
 import com.niluogege.server.pojo.RespBean;
+import com.niluogege.server.pojo.Role;
 import com.niluogege.server.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -45,6 +48,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     public RespBean login(String username, String password,String code, HttpServletRequest request) {
@@ -79,5 +85,14 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public Admin getAdminByUserName(String username) {
         return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username",username));
+    }
+
+    /**
+     * 通过用户id 获取对应角色（权限）
+     */
+    @Override
+    public List<Role> getRoles(Integer adminId) {
+      return   roleMapper.getRoles(adminId);
+
     }
 }

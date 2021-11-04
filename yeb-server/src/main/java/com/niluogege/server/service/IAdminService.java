@@ -3,8 +3,10 @@ package com.niluogege.server.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.niluogege.server.pojo.Admin;
 import com.niluogege.server.pojo.RespBean;
+import com.niluogege.server.pojo.Role;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -31,4 +33,10 @@ public interface IAdminService extends IService<Admin> {
      * 通过 username 获取用户信息
      */
     Admin getAdminByUserName(String username);
+
+
+    /**
+     * 通过用户id 获取对应角色（权限）
+     */
+    List<Role> getRoles(Integer adminId);
 }
