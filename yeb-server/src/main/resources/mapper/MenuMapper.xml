@@ -31,6 +31,14 @@
         </collection>
     </resultMap>
 
+    <resultMap id="MenuWithRole" type="com.niluogege.server.pojo.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.niluogege.server.pojo.Role">
+            <id column="rid" property="id" />
+            <result column="rname" property="name" />
+            <result column="rnameZh" property="nameZh" />
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, url, path, component, name, iconCls, keepAlive, requireAuth, parentId, enabled
@@ -66,6 +74,27 @@
             m1.id,
             m2.id
 
+    </select>
+
+    <select id="getAllMenuWithRole" resultMap="MenuWithRole">
+        SELECT DISTINCT
+            m.*,
+            r.id as rid,
+            r.name as rname,
+            r.nameZh as rnameZh
+
+        FROM
+            t_menu as m,
+            t_role as r,
+            t_menu_role as mr
+
+        WHERE
+            r.id = mr.rid
+          AND
+            mr.mid = m.id
+
+        ORDER BY
+            m.id
     </select>
 
 </mapper>

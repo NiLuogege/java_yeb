@@ -16,4 +16,6 @@ import java.util.List;
 public interface MenuMapper extends BaseMapper<Menu> {
 
     List<Menu> getMenusByAdminId(Integer adminId);
+
+    List<Menu> getAllMenuWithRole();
 }

@@ -50,4 +50,11 @@ public class MenuController {
         return RespBean.success(menus);
     }
 
+
+    @ApiOperation("获取菜单对应的角色列表")
+    @GetMapping("/getAllMenusWithRole")
+    public RespBean getAllMenusWithRole(){
+        List<Menu> allMenuWithRole = menuService.getAllMenuWithRole();
+        return RespBean.success(allMenuWithRole);
+    }
 }
