@@ -1,8 +1,10 @@
 package com.niluogege.server.controller;
 
 
+import com.niluogege.server.pojo.Menu;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.Role;
+import com.niluogege.server.service.IMenuService;
 import com.niluogege.server.service.IRoleService;
 import com.niluogege.server.service.impl.RoleServiceImpl;
 import io.swagger.annotations.Api;
@@ -19,6 +21,9 @@ public class PermissController {
 
     @Autowired
     private IRoleService roleService;
+
+    @Autowired
+    private IMenuService menuService;
 
     @ApiOperation("获取所有角色")
     @GetMapping("/")
@@ -52,5 +57,11 @@ public class PermissController {
         return RespBean.success("删除失败");
     }
 
+
+    @ApiOperation("获取所有菜单")
+    @GetMapping("/menus")
+    public List<Menu> getAllMenus(){
+        return menuService.getAllMenus();
+    }
 
 }
