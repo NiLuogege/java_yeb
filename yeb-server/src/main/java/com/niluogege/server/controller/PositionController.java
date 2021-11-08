@@ -1,13 +1,14 @@
 package com.niluogege.server.controller;
 
 
+import com.niluogege.server.pojo.Position;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.service.IPositionService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -28,6 +29,18 @@ public class PositionController {
     @GetMapping("/getAllPositions")
     public RespBean getAllPositions() {
         return RespBean.success(positionService.list());
+    }
+
+    @ApiOperation("添加职位")
+    @PostMapping("/addPosition")
+    public RespBean addPosition(@RequestBody Position position){
+        position.setCreateDate(LocalDateTime.now());
+        boolean saved = positionService.save(position);
+        if (saved){
+            return RespBean.success("添加成功");
+        }
+
+        return RespBean.error("添加失败");
     }
 
 }
