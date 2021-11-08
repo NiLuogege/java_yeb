@@ -2,6 +2,7 @@ package com.niluogege.server.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.niluogege.server.pojo.MenuRole;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.niluogege.server.pojo.MenuRole;
  */
 public interface MenuRoleMapper extends BaseMapper<MenuRole> {
 
+    Integer insertRecord(@Param("rid")Integer rid, @Param("mids") Integer[] mid);
 }

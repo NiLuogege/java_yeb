@@ -1,9 +1,12 @@
 package com.niluogege.server.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.niluogege.server.pojo.Menu;
+import com.niluogege.server.pojo.MenuRole;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.Role;
+import com.niluogege.server.service.IMenuRoleService;
 import com.niluogege.server.service.IMenuService;
 import com.niluogege.server.service.IRoleService;
 import com.niluogege.server.service.impl.RoleServiceImpl;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(tags = "PermissController")
 @RestController
@@ -24,6 +28,8 @@ public class PermissController {
 
     @Autowired
     private IMenuService menuService;
+    @Autowired
+    private IMenuRoleService menuRoleService;
 
     @ApiOperation("获取所有角色")
     @GetMapping("/")
@@ -60,8 +66,24 @@ public class PermissController {
 
     @ApiOperation("获取所有菜单")
     @GetMapping("/menus")
-    public List<Menu> getAllMenus(){
+    public List<Menu> getAllMenus() {
         return menuService.getAllMenus();
     }
 
+
+    @GetMapping("mid/{rid}")
+    @ApiOperation("根据角色id查询菜单id")
+    public List<Integer> getMidByRid(Integer rid) {
+        return menuRoleService.list(new QueryWrapper<MenuRole>().eq("rid", rid))
+                .stream()
+                .map(MenuRole::getMid)
+                .collect(Collectors.toList());
+    }
+
+
+    @ApiOperation("更新角色菜单")
+    @PutMapping("/")
+    public RespBean updateMenuRole(Integer rid,Integer[] mid){
+       return menuRoleService.updateMenuRole(rid,mid);
+    }
 }

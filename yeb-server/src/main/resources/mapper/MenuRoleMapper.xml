@@ -4,14 +4,24 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.niluogege.server.pojo.MenuRole">
-        <id column="id" property="id" />
-        <result column="mid" property="mid" />
-        <result column="rid" property="rid" />
+        <id column="id" property="id"/>
+        <result column="mid" property="mid"/>
+        <result column="rid" property="rid"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, mid, rid
     </sql>
+
+    <insert id="insertRecord">
+        INSERT
+        INTO
+        t_menu_role(rid, mid)
+        VALUES
+        <foreach collection="mids" item="mid" separator=",">
+            (#{rid}, #{mid})
+        </foreach>
+    </insert>
 
 </mapper>

@@ -2,6 +2,7 @@ package com.niluogege.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.niluogege.server.pojo.MenuRole;
+import com.niluogege.server.pojo.RespBean;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.niluogege.server.pojo.MenuRole;
  */
 public interface IMenuRoleService extends IService<MenuRole> {
 
+    RespBean updateMenuRole(Integer rid, Integer[] mid);
 }
