@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.niluogege.server.config.security.component.JwtTokenUtil;
 import com.niluogege.server.mapper.AdminMapper;
+import com.niluogege.server.mapper.AdminRoleMapper;
 import com.niluogege.server.mapper.RoleMapper;
 import com.niluogege.server.pojo.Admin;
+import com.niluogege.server.pojo.AdminRole;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.Role;
 import com.niluogege.server.service.IAdminService;
@@ -17,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +54,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private AdminRoleMapper adminRoleMapper;
 
     @Override
     public RespBean login(String username, String password, String code, HttpServletRequest request) {
@@ -102,5 +108,22 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     @Override
     public List<Admin> getAllAdmins(String keyword) {
         return adminMapper.getAllAdmins(keyword);
+    }
+
+    /**
+     * 修改用户角色
+     */
+    @Override
+    @Transactional
+    public RespBean updateAdminRole(Integer amdinId, Integer[] rids) {
+        //先删除 这个用户
+        adminRoleMapper.delete(new QueryWrapper<AdminRole>().eq("adminId", amdinId));
+        Integer result = adminRoleMapper.addRole(amdinId, rids);
+        if (result == rids.length) {
+            return RespBean.error("更新成功");
+
+        }
+        return RespBean.error("更新失败");
+
     }
 }

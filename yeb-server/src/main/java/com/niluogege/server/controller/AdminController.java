@@ -58,4 +58,10 @@ public class AdminController {
 
         return RespBean.error("删除失败");
     }
+
+    @PutMapping("/role")
+    @ApiOperation("修改用户角色")
+    public  RespBean updateAdminRole(Integer amdinId , Integer[] rids){
+        return adminService.updateAdminRole(amdinId,rids);
+    }
 }

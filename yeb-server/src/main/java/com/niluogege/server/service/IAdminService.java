@@ -44,4 +44,9 @@ public interface IAdminService extends IService<Admin> {
      * 根据 名字 模糊查询管理员 列表
      */
     List<Admin> getAllAdmins(String keyword);
+
+    /**
+     * 修改用户角色
+     */
+    RespBean updateAdminRole(Integer amdinId, Integer[] rids);
 }
