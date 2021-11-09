@@ -3,16 +3,14 @@ package com.niluogege.server.controller;
 
 import com.niluogege.server.pojo.Employee;
 import com.niluogege.server.pojo.Nation;
+import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.RespPageBean;
 import com.niluogege.server.service.IEmployeeService;
 import com.niluogege.server.service.INationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,4 +52,16 @@ public class EmployeeController {
 
     }
 
+    @ApiOperation("添加员工")
+    @PostMapping("/")
+    public RespBean addEmp(@RequestBody Employee employee){
+        return employeeService.addEmp(employee);
+    }
+
+
+    @ApiOperation("获取工号")
+    @GetMapping("/maxWorkId")
+    public RespBean maxWorkId(){
+        return employeeService.maxWorkId();
+    }
 }

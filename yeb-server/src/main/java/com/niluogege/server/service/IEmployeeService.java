@@ -2,6 +2,7 @@ package com.niluogege.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.niluogege.server.pojo.Employee;
+import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.RespPageBean;
 
 import java.time.LocalDate;
@@ -25,4 +26,17 @@ public interface IEmployeeService extends IService<Employee> {
      * @return
      */
     RespPageBean getEmployeeByPage(Integer currentPage, Integer size, Employee employee, LocalDate[] deginDateScope);
+
+    /**
+     * 添加员工
+     * @param employee
+     * @return
+     */
+    RespBean addEmp(Employee employee);
+
+    /**
+     * 获取工号
+     * @return
+     */
+    RespBean maxWorkId();
 }
