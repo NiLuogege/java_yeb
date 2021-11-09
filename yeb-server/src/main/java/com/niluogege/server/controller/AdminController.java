@@ -1,6 +1,7 @@
 package com.niluogege.server.controller;
 
 
+import com.niluogege.server.pojo.Admin;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.Role;
 import com.niluogege.server.service.IAdminService;
@@ -21,7 +22,7 @@ import java.util.List;
  * @since 2021-10-29
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/system/admin")
 public class AdminController {
 
     @Autowired
@@ -34,4 +35,9 @@ public class AdminController {
         return RespBean.success(roles);
     }
 
+    @GetMapping("/")
+    @ApiOperation("根据 名字 模糊查询管理员 列表")
+    public List<Admin> getAllAdmins(String keyword){
+        return  adminService.getAllAdmins(keyword);
+    }
 }

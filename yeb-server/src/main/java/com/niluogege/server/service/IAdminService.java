@@ -39,4 +39,9 @@ public interface IAdminService extends IService<Admin> {
      * 通过用户id 获取对应角色（权限）
      */
     List<Role> getRoles(Integer adminId);
+
+    /**
+     * 根据 名字 模糊查询管理员 列表
+     */
+    List<Admin> getAllAdmins(String keyword);
 }

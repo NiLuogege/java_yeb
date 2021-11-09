@@ -53,10 +53,10 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     private RoleMapper roleMapper;
 
     @Override
-    public RespBean login(String username, String password,String code, HttpServletRequest request) {
+    public RespBean login(String username, String password, String code, HttpServletRequest request) {
         //通过session 拿到 验证码
         String captcha = (String) request.getSession().getAttribute("captcha");
-        if (StringUtils.isEmpty(captcha) || !captcha.equals(code)){
+        if (StringUtils.isEmpty(captcha) || !captcha.equals(code)) {
             return RespBean.error("验证码错误");
         }
 
@@ -84,7 +84,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
     @Override
     public Admin getAdminByUserName(String username) {
-        return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username",username));
+        return adminMapper.selectOne(new QueryWrapper<Admin>().eq("username", username));
     }
 
     /**
@@ -92,7 +92,15 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
      */
     @Override
     public List<Role> getRoles(Integer adminId) {
-      return   roleMapper.getRoles(adminId);
+        return roleMapper.getRoles(adminId);
 
+    }
+
+    /**
+     * 根据 名字 模糊查询管理员 列表
+     */
+    @Override
+    public List<Admin> getAllAdmins(String keyword) {
+        return adminMapper.getAllAdmins(keyword);
     }
 }
