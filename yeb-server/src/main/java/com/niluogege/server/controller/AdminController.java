@@ -5,6 +5,7 @@ import com.niluogege.server.pojo.Admin;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.Role;
 import com.niluogege.server.service.IAdminService;
+import com.niluogege.server.service.IRoleService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +27,21 @@ public class AdminController {
     @Autowired
     private IAdminService adminService;
 
+    @Autowired
+    private IRoleService roleService;
+
     @ApiOperation("通过用户id 获取对应角色（权限）")
     @GetMapping("/getRoles")
     public RespBean getRoles(Integer adminId) {
         List<Role> roles = adminService.getRoles(adminId);
         return RespBean.success(roles);
+    }
+
+
+    @ApiOperation("获取所有角色")
+    @GetMapping("/roles")
+    public RespBean getAllRoles(){
+        return RespBean.success(roleService.list());
     }
 
     @GetMapping("/")
