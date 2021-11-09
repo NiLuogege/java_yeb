@@ -1,8 +1,10 @@
 package com.niluogege.server.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -117,5 +119,28 @@ public class Employee implements Serializable {
     @ApiModelProperty(value = "工资账套ID")
     private Integer salaryId;
 
+    @ApiModelProperty("民族")
+    @TableField(exist = false)
+    private Nation nation;
+
+
+    @ApiModelProperty("政治面貌")
+    @TableField(exist = false)
+    private PoliticsStatus politicsStatus;
+
+
+    @ApiModelProperty("部门")
+    @TableField(exist = false)
+    private Department department;
+
+
+    @ApiModelProperty("职称")
+    @TableField(exist = false)
+    private Joblevel joblevel;
+
+
+    @ApiModelProperty("职位")
+    @TableField(exist = false)
+    private Position position;
 
 }
