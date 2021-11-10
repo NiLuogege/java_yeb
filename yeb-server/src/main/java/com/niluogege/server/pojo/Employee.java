@@ -1,5 +1,7 @@
 package com.niluogege.server.pojo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +18,7 @@ import java.time.LocalDate;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author niluogege
@@ -26,7 +28,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_employee")
-@ApiModel(value="Employee对象", description="")
+@ApiModel(value = "Employee对象", description = "")
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,12 +38,15 @@ public class Employee implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "员工姓名")
+    @Excel(name = "员工姓名")
     private String name;
 
     @ApiModelProperty(value = "性别")
+    @Excel(name = "性别")
     private String gender;
 
     @ApiModelProperty(value = "出生日期")
+    @Excel(name = "出生日期", width = 30)
     private LocalDate birthday;
 
     @ApiModelProperty(value = "身份证号")
@@ -60,6 +65,7 @@ public class Employee implements Serializable {
     private Integer politicId;
 
     @ApiModelProperty(value = "邮箱")
+    @Excel(name = "邮箱", width = 30)
     private String email;
 
     @ApiModelProperty(value = "电话号码")
@@ -102,6 +108,7 @@ public class Employee implements Serializable {
     private Double contractTerm;
 
     @ApiModelProperty(value = "转正日期")
+    @Excel(name = "转正日期", width = 30)
     private LocalDate conversionTime;
 
     @ApiModelProperty(value = "离职日期")
@@ -131,6 +138,7 @@ public class Employee implements Serializable {
 
     @ApiModelProperty("部门")
     @TableField(exist = false)
+    @ExcelEntity(name = "部门Entity")
     private Department department;
 
 

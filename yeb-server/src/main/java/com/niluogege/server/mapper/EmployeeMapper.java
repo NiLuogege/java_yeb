@@ -7,6 +7,7 @@ import com.niluogege.server.pojo.Employee;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -28,4 +29,6 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
     IPage<Employee> getEmployeeByPage(@Param("page") Page<Employee> page,
                                       @Param("employee") Employee employee,
                                       @Param("deginDateScope") LocalDate[] deginDateScope);
+
+    List<Employee> getEmployees(@Param("id") Integer id);
 }

@@ -107,4 +107,46 @@
     </select>
 
 
+    <select id="getEmployees" resultMap="EmployeeTotal">
+        select DISTINCT e.*,
+        n.id as nId,
+        n.name as nName,
+        ps.id as psId,
+        ps.name as psName,
+        d.id as DId,
+        d.name as DName,
+        d.parentId as dParentId,
+        d.depPath as dDepPath,
+        d.isParent as dIsParent,
+        d.enabled as DEnables,
+        j.id as jId,
+        j.name as jName,
+        j.titleLevel as jTitleLevel,
+        j.createDate as jCreateDate,
+        j.enabled as jEnabled,
+        p.id as pId,
+        p.name as pName,
+        p.createDate as pCreateDate,
+        p.enabled as pEnabled
+
+        FROM t_employee as e,
+        t_nation as n,
+        t_politics_status as ps,
+        t_department as d,
+        t_joblevel as j,
+        t_position as p
+
+        WHERE e.nationId = n.id
+        AND e.politicId = ps.id
+        AND e.departmentId = d.id
+        AND e.jobLevelId = j.id
+        AND e.posId = p.id
+
+        <if test="null!=id">
+            AND e.id = #{id}
+        </if>
+
+    </select>
+
+
 </mapper>

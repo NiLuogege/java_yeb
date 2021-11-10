@@ -6,6 +6,7 @@ import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.RespPageBean;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -39,4 +40,10 @@ public interface IEmployeeService extends IService<Employee> {
      * @return
      */
     RespBean maxWorkId();
+
+    /**
+     * 获取员工
+     */
+    List<Employee> getEmployees(Integer id);
+
 }
