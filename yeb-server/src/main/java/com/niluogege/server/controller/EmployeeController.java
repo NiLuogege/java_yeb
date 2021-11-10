@@ -2,19 +2,22 @@ package com.niluogege.server.controller;
 
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
-import com.niluogege.server.pojo.Employee;
-import com.niluogege.server.pojo.Nation;
-import com.niluogege.server.pojo.RespBean;
-import com.niluogege.server.pojo.RespPageBean;
+import com.niluogege.server.pojo.*;
+import com.niluogege.server.service.IDepartmentService;
 import com.niluogege.server.service.IEmployeeService;
 import com.niluogege.server.service.INationService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +44,9 @@ public class EmployeeController {
 
     @Autowired
     private IEmployeeService employeeService;
+
+    @Autowired
+    private IDepartmentService departmentService;
 
     @ApiOperation(value = "获取所有民族")
     @GetMapping("/nations")
@@ -98,5 +104,36 @@ public class EmployeeController {
                 }
             }
         }
+    }
+
+    /**
+     * ApiImplicitParams 是 swagger 的注解，标识对参数的讲解
+     */
+    @ApiImplicitParams({@ApiImplicitParam(name = "file",value = "上传文件",dataType = "MultipartFile")})
+    @PostMapping("/import")
+    @ApiOperation("导入员工")
+    public RespBean importEmployee(MultipartFile file){
+        ImportParams importParams = new ImportParams();
+        //去掉标题栏
+        importParams.setTitleRows(1);
+
+        List<Department> departments = departmentService.list();
+
+        try {
+            List<Employee> list = ExcelImportUtil.importExcel(file.getInputStream(), Employee.class, importParams);
+            list.forEach(employee->{
+                int index = departments.indexOf(new Department(employee.getDepartment().getName()));
+                Department department = departments.get(index);
+                employee.setDepartmentId(department.getId());
+            });
+
+            if (employeeService.saveBatch(list)){
+                return RespBean.success("导入成功");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return RespBean.error("导入失败");
     }
 }
