@@ -1,8 +1,11 @@
 package org.niluogege;
 
+import com.rabbitmq.client.AMQP;
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 
 /**
  * 启动类
@@ -16,9 +19,13 @@ public class MailApplication {
 		SpringApplication.run(MailApplication.class,args);
 	}
 
-//	@Bean
-//	public Queue queue(){
-//		return new Queue(MailConstants.MAIL_QUEUE_NAME);
-//	}
+	/**
+	 * 创建 消息队列
+	 * @return
+	 */
+	@Bean
+	public Queue queue(){
+		return new Queue("mail.welcome");
+	}
 
 }

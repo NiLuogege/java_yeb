@@ -9,6 +9,7 @@ import com.niluogege.server.pojo.Employee;
 import com.niluogege.server.pojo.RespBean;
 import com.niluogege.server.pojo.RespPageBean;
 import com.niluogege.server.service.IEmployeeService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Autowired
     private EmployeeMapper employeeMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
 
     /**
@@ -68,6 +72,8 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         employee.setContractTerm(Double.parseDouble(decimalFormat.format(days / 365.00)));
 
         if (1 == employeeMapper.insert(employee)) {
+            //发送消息去发送右键
+            rabbitTemplate.convertAndSend("mail.welcome", employee);
             return RespBean.success("添加成功!");
 
         }

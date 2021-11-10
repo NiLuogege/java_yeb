@@ -72,9 +72,14 @@ public class JwtTokenUtil {
 
 
     public String getUserNameFormToken(String token) {
-        Claims claims = getClaimsFormToken(token);
-        //存的时候是吧 username 存到了 sub 中，所以可以调用 getSubject 来取
-        String userName = claims.getSubject();
+        String userName = null;
+        try {
+            Claims claims = getClaimsFormToken(token);
+            //存的时候是吧 username 存到了 sub 中，所以可以调用 getSubject 来取
+            userName = claims.getSubject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return userName;
     }
 
