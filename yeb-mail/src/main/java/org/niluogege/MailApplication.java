@@ -1,5 +1,6 @@
 package org.niluogege;
 
+import com.niluogege.server.pojo.MailConstants;
 import com.rabbitmq.client.AMQP;
 import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +26,7 @@ public class MailApplication {
 	 */
 	@Bean
 	public Queue queue(){
-		return new Queue("mail.welcome");
+		return new Queue(MailConstants.MAIL_QUEUE_NAME);
 	}
 
 }

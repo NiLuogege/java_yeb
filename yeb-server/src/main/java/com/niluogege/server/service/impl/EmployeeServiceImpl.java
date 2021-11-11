@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.niluogege.server.mapper.EmployeeMapper;
-import com.niluogege.server.pojo.Employee;
-import com.niluogege.server.pojo.RespBean;
-import com.niluogege.server.pojo.RespPageBean;
+import com.niluogege.server.mapper.MailLogMapper;
+import com.niluogege.server.pojo.*;
 import com.niluogege.server.service.IEmployeeService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * <p>
@@ -36,6 +38,9 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private MailLogMapper mailLogMapper;
 
 
     /**
@@ -72,6 +77,21 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         employee.setContractTerm(Double.parseDouble(decimalFormat.format(days / 365.00)));
 
         if (1 == employeeMapper.insert(employee)) {
+
+            //消息入库 保证消息可靠性
+            MailLog mailLog = new MailLog();
+            mailLog.setEid(employee.getId());
+            mailLog.setCreateTime(LocalDateTime.now());
+            mailLog.setUpdateTime(LocalDateTime.now());
+            mailLog.setTryTime(LocalDateTime.now().plusMinutes(MailConstants.MSG_TIMEOUT));
+            mailLog.setRouteKey(MailConstants.MAIL_ROUTING_KEY_NAME);
+            mailLog.setExchange(MailConstants.MAIL_EXCHANGE_NAME);
+            mailLog.setMsgId(UUID.randomUUID().toString());
+            mailLog.setStatus(MailConstants.DELIVERING);
+            mailLog.setCount(0);
+            mailLogMapper.insert(mailLog);
+
+
             //发送消息去发送右键
             rabbitTemplate.convertAndSend("mail.welcome", employee);
             return RespBean.success("添加成功!");

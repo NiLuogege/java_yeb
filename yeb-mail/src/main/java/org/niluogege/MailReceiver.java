@@ -1,6 +1,7 @@
 package org.niluogege;
 
 import com.niluogege.server.pojo.Employee;
+import com.niluogege.server.pojo.MailConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -33,7 +34,7 @@ public class MailReceiver {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @RabbitListener(queues = "mail.welcome")
+    @RabbitListener(queues = MailConstants.MAIL_QUEUE_NAME)
     public void handler(Employee employee){
         logger.error("收到发送右键消息啦 name="+employee.getName());
 
