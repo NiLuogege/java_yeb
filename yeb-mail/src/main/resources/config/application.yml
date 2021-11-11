@@ -28,3 +28,7 @@ spring:
     host: 127.0.0.1
     # 端口
     port: 5672
+    listener:
+      simple:
+        #服务端 开启手动确认
+        acknowledge-mode: manual

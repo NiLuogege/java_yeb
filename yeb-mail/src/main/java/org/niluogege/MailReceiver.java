@@ -2,19 +2,26 @@ package org.niluogege;
 
 import com.niluogege.server.pojo.Employee;
 import com.niluogege.server.pojo.MailConstants;
+import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -34,14 +41,33 @@ public class MailReceiver {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @RabbitListener(queues = MailConstants.MAIL_QUEUE_NAME)
-    public void handler(Employee employee){
-        logger.error("收到发送右键消息啦 name="+employee.getName());
+    public void handler(Message message, Channel channel) {
 
-        MimeMessage msg = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(msg);
+        Employee employee = (Employee) message.getPayload();
+        MessageHeaders headers = message.getHeaders();
+        //消息序列号
+        long tag = (long) headers.get(AmqpHeaders.DELIVERY_TAG);
+        String msgId = (String) headers.get("spring_returned_message_correlation");
 
+        HashOperations hashOperations = redisTemplate.opsForHash();
         try {
+            if (hashOperations.entries("mail_log").containsKey(msgId)) {
+
+                logger.info("命中 缓存 消息已经被消费", msgId);
+
+                channel.basicAck(tag, false);
+                return;
+            }
+
+            logger.error("收到发送右键消息啦 name=" + employee.getName());
+
+            MimeMessage msg = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(msg);
+
             //发件人
             helper.setFrom(mailProperties.getUsername());
             //收件人
@@ -52,19 +78,31 @@ public class MailReceiver {
             helper.setSentDate(new Date());
             //邮件内容
             Context context = new Context();
-            context.setVariable("name",employee.getName());
-            context.setVariable("posName","posName");
-            context.setVariable("joblevelName","joblevelName");
-            context.setVariable("departmentName","departmentName");
+            context.setVariable("name", employee.getName());
+            context.setVariable("posName", "posName");
+            context.setVariable("joblevelName", "joblevelName");
+            context.setVariable("departmentName", "departmentName");
 
 
             String mail = templateEngine.process("mail", context);
-            helper.setText(mail,true);
+            helper.setText(mail, true);
             javaMailSender.send(msg);
+            logger.error("邮件发送成功");
+            //发送成功就放到 redis中，放入 缓存 主要是 保证 消息的幂等性，也就是 邮件不被重复发
+            hashOperations.put("mail_log",msgId,"ok");
+            channel.basicAck(tag,false);
 
-
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
+            try {
+                channel.basicNack(tag,false,true);
+            } catch (IOException ioException) {
+                logger.error("邮件发送失败");
+                ioException.printStackTrace();
+            }
+            logger.error("邮件发送失败");
+
         }
 
     }

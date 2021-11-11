@@ -8,6 +8,7 @@ import com.niluogege.server.mapper.EmployeeMapper;
 import com.niluogege.server.mapper.MailLogMapper;
 import com.niluogege.server.pojo.*;
 import com.niluogege.server.service.IEmployeeService;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
 
             //发送消息去发送右键
-            rabbitTemplate.convertAndSend("mail.welcome", employee);
+            rabbitTemplate.convertAndSend(MailConstants.MAIL_EXCHANGE_NAME, MailConstants.MAIL_ROUTING_KEY_NAME, employee, new CorrelationData(mailLog.getMsgId()));
             return RespBean.success("添加成功!");
 
         }
